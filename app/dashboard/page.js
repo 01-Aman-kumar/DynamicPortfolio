@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import API from "@/lib/api";
 import Link from "next/link";
-import ProtectedRoute from "@/components/ProctectedRoute";
 import { useAuth } from "@/context/AuthContext";
 export default function DashboardHome() {
   const { user} = useAuth();
@@ -17,7 +16,7 @@ export default function DashboardHome() {
   
 
 useEffect(() => {
-  if (loading || !user) return; // 🔥 STOP HERE
+  if (!user) return; // ✅ only check user
 
   const fetchAll = async () => {
     try {
@@ -46,7 +45,7 @@ useEffect(() => {
       });
 
     } catch (err) {
-      if (err.response?.status === 401) return; // 🔥 ignore
+      if (err.response?.status === 401) return;
       console.error("Dashboard error:", err);
     } finally {
       setLoading(false);
@@ -54,7 +53,7 @@ useEffect(() => {
   };
 
   fetchAll();
-}, [user, loading]);
+}, [user]); // ✅ only user
 
   if (loading) {
     return <div className="p-6 text-white">Loading dashboard...</div>;
