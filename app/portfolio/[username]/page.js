@@ -41,12 +41,14 @@ export default function PortfolioPage() {
   }, [username]);
 
   if (loading) {
-    return (
-      <div className="p-10 animate-pulse text-white">
-        Loading...
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#020617] text-white">
+      <div className="animate-pulse text-lg">
+        Loading Portfolio...
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   const { profile, achievements, projects, skills, education } = data;
   console.log(profile);
