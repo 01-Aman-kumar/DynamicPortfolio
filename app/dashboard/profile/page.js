@@ -37,9 +37,7 @@ export default function ProfilePage() {
         resumeUrl: data.resumeUrl || "",
         theme: data.theme || "dark",
       });
-    } catch {
-      console.log("No profile yet");
-    }
+    } catch {}
   };
 
   const handleSave = async () => {
@@ -58,18 +56,13 @@ export default function ProfilePage() {
         formData.append("image", form.profileImage);
       }
 
-     await API.post("/profile", formData);
-    //  const username=res.data.data;
-    let res=await API.get("profile/me");
+      await API.post("/profile", formData);
 
-     let username= res.data.user.username;
+      let res = await API.get("profile/me");
+      let username = res.data.user.username;
 
-      alert("Profile saved successfully");
       router.push(`/portfolio/${username}`);
-      
-      fetchProfile();
-    } catch (error) {
-      console.error(error);
+    } catch {
       alert("Error saving profile");
     } finally {
       setLoading(false);
@@ -81,44 +74,41 @@ export default function ProfilePage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen text-white p-6 md:p-10">
+    <div className="profile-ui min-h-screen text-white p-4 md:p-10 bg-gradient-to-br from-black via-gray-900 to-gray-800">
 
       {/* HEADER */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-10"
+        className="mb-8"
       >
-        <h2 className="text-3xl font-bold">Profile Settings</h2>
-        <p className="text-gray-400 mt-1">
+        <h2 className="text-2xl md:text-3xl font-bold">
+          Profile Settings
+        </h2>
+        <p className="text-gray-400 text-sm">
           Update your personal information
         </p>
       </motion.div>
 
-      {/* FORM CARD */}
+      {/* MAIN CARD */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="p-8 rounded-2xl 
-                   bg-white/10 backdrop-blur-xl 
-                   border border-white/20 
-                   shadow-lg"
+        className="p-card max-w-4xl mx-auto"
       >
 
-        {/* IMAGE UPLOAD */}
-        <div className="flex items-center gap-6 mb-8">
+        {/* IMAGE */}
+        <div className="flex items-center gap-5 mb-6">
           <div className="relative">
             <img
               src={form.preview || "/placeholder.png"}
-              className="w-24 h-24 rounded-full object-cover border border-white/20"
+              className="w-20 h-20 rounded-full object-cover border border-white/20"
             />
-
-            <label className="absolute bottom-0 right-0 bg-blue-500 p-1 rounded-full cursor-pointer text-xs">
+            <label className="absolute bottom-0 right-0 bg-blue-500 px-2 py-1 text-xs rounded-full cursor-pointer">
               ✏️
               <input
                 type="file"
                 className="hidden"
-                accept="image/*"
                 onChange={(e) => {
                   const file = e.target.files[0];
                   if (file) {
@@ -135,70 +125,40 @@ export default function ProfilePage() {
 
           <div>
             <p className="text-sm text-gray-400">Profile Image</p>
-            <p className="text-xs text-gray-500">
-              Click icon to change
-            </p>
+            <p className="text-xs text-gray-500">Click to change</p>
           </div>
         </div>
 
-        {/* GRID FORM */}
-        <div className="grid md:grid-cols-2 gap-6">
+        {/* FORM GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-          <Input
-            label="Full Name"
-            value={form.name}
-            onChange={(v) => setForm({ ...form, name: v })}
-          />
+          <Input label="Full Name" value={form.name} onChange={(v)=>setForm({...form,name:v})}/>
+          <Input label="Title" value={form.title} onChange={(v)=>setForm({...form,title:v})}/>
+          <Input label="GitHub" value={form.github} onChange={(v)=>setForm({...form,github:v})}/>
+          <Input label="LinkedIn" value={form.linkedin} onChange={(v)=>setForm({...form,linkedin:v})}/>
+          {/* <Input label="Resume URL" value={form.resumeUrl} onChange={(v)=>setForm({...form,resumeUrl:v})}/> */}
 
-          <Input
-            label="Title"
-            value={form.title}
-            onChange={(v) => setForm({ ...form, title: v })}
-          />
-
-          <Input
-            label="GitHub"
-            value={form.github}
-            onChange={(v) => setForm({ ...form, github: v })}
-          />
-
-          <Input
-            label="LinkedIn"
-            value={form.linkedin}
-            onChange={(v) => setForm({ ...form, linkedin: v })}
-          />
-
-          <Input
-            label="Resume URL"
-            value={form.resumeUrl}
-            onChange={(v) => setForm({ ...form, resumeUrl: v })}
-          />
-
-          {/* THEME */}
-          <div>
-            <label className="label">Theme</label>
+          {/* <div>
+            <label className="p-label">Theme</label>
             <select
-              className="input"
+              className="p-input"
               value={form.theme}
-              onChange={(e) =>
-                setForm({ ...form, theme: e.target.value })
-              }
+              onChange={(e)=>setForm({...form,theme:e.target.value})}
             >
               <option value="dark">Dark</option>
               <option value="light">Light</option>
             </select>
-          </div>
+          </div> */}
+
         </div>
 
         {/* BIO */}
-        <div className="mt-6">
-          <label className="label">Bio</label>
+        <div className="mt-5">
+          <label className="p-label">Bio</label>
           <textarea
-            className="input min-h-[100px]"
+            className="p-input min-h-[100px]"
             value={form.bio}
-            onChange={(e) =>
-              setForm({ ...form, bio: e.target.value })
-            }
+            onChange={(e)=>setForm({...form,bio:e.target.value})}
           />
         </div>
 
@@ -206,27 +166,25 @@ export default function ProfilePage() {
         <button
           onClick={handleSave}
           disabled={loading}
-          className="mt-8 w-full bg-blue-500 hover:bg-blue-600 
-                     px-4 py-3 rounded-xl font-medium 
-                     transition disabled:opacity-50"
+          className="mt-6 w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-sm font-medium transition"
         >
           {loading ? "Saving..." : "Save Profile"}
         </button>
+
       </motion.div>
     </div>
   );
 }
 
-/* ================= COMPONENT ================= */
-
+/* COMPONENT */
 function Input({ label, value, onChange }) {
   return (
     <div>
-      <label className="label">{label}</label>
+      <label className="p-label">{label}</label>
       <input
-        className="input"
+        className="p-input"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e)=>onChange(e.target.value)}
       />
     </div>
   );

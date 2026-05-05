@@ -57,3 +57,90 @@
   background: #3b82f6;
   border-radius: 50%;
 } 
+
+
+
+/* input {
+  @apply bg-white/10 border border-white/20 rounded px-3 py-2 
+         outline-none focus:ring-2 focus:ring-blue-500 
+         text-sm;
+} */
+ /* ONLY for education page */
+.edu-ui .edu-input {
+  @apply w-full px-3 py-2 rounded-lg 
+         bg-white/5 border border-white/10 
+         text-sm text-white 
+         placeholder-gray-400
+         outline-none transition;
+
+  backdrop-filter: blur(6px);
+}
+
+.edu-ui .edu-input:focus {
+  @apply border-blue-500 ring-1 ring-blue-500;
+}
+
+.edu-ui .edu-card {
+  @apply bg-white/5 border border-white/10 
+         rounded-xl p-4 shadow 
+         backdrop-blur-md transition;
+}
+
+.edu-ui .edu-card:hover {
+  transform: translateY(-2px);
+}
+
+/* ONLY for profile page */
+.profile-ui .p-input {
+  @apply w-full px-3 py-2 rounded-lg 
+         bg-white/5 border border-white/10 
+         text-sm text-white 
+         placeholder-gray-400
+         outline-none transition;
+
+  backdrop-filter: blur(6px);
+}
+
+.profile-ui .p-input:focus {
+  @apply border-blue-500 ring-1 ring-blue-500;
+}
+
+.profile-ui .p-label {
+  @apply text-sm text-gray-400 mb-1 block;
+}
+
+.profile-ui .p-card {
+  @apply bg-white/5 border border-white/10 
+         rounded-2xl p-6 shadow-lg 
+         backdrop-blur-xl transition;
+}
+
+.profile-ui .p-card:hover {
+  transform: translateY(-2px);
+}
+
+/* loginpage */
+/* ONLY for login page */
+.login-ui .l-input {
+  @apply w-full px-3 py-2 rounded-lg 
+         bg-white/5 border border-white/10 
+         text-sm text-white 
+         placeholder-gray-400
+         outline-none transition;
+
+  backdrop-filter: blur(6px);
+}
+
+.login-ui .l-input:focus {
+  @apply border-blue-500 ring-1 ring-blue-500;
+}
+
+.login-ui .l-card {
+  @apply bg-white/5 border border-white/10 
+         rounded-2xl p-6 shadow-lg 
+         backdrop-blur-xl transition;
+}
+
+.login-ui .l-card:hover {
+  transform: translateY(-2px);
+}

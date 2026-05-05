@@ -29,6 +29,7 @@ export default function PortfolioPage() {
       try {
         const res = await API.get(`/portfolio/${username}`);
         setData(res.data.data);
+        console.log(res.data.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -48,6 +49,7 @@ export default function PortfolioPage() {
   }
 
   const { profile, achievements, projects, skills, education } = data;
+  console.log(profile);
 
   return (
     
@@ -96,11 +98,11 @@ export default function PortfolioPage() {
             </a>
 
             <a
-              href={profile?.resumeUrl}
+              href={profile?.socialLinks?.linkedin}
               target="_blank"
               className="btn-primary"
             >
-              Resume
+              LinkedIn
             </a>
           </div>
         </motion.div>
@@ -193,6 +195,30 @@ export default function PortfolioPage() {
               <p className="text-gray-400 text-sm">
                 {p.description}
               </p>
+              <div className="flex gap-4 mt-3 text-sm">
+
+                  {p.liveLink && (
+                    <a
+                      href={p.liveLink}
+                      target="_blank"
+                      className="text-blue-400"
+                    >
+                      Live
+                    </a>
+                  )}
+
+                  {p.githubLink && (
+                    <a
+                      href={p.githubLink}
+                      target="_blank"
+                      className="text-gray-400"
+                    >
+                      GitHub
+                    </a>
+                  )}
+
+                </div>
+                  
             </motion.div>
           ))}
         </div>

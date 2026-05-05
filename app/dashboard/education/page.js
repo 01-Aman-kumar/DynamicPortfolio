@@ -19,6 +19,8 @@ export default function EducationPage() {
   };
 
   const handleAdd = async () => {
+    if (!form.institution || !form.degree) return;
+
     await API.post("/education", form);
     setForm({
       institution: "",
@@ -40,71 +42,140 @@ export default function EducationPage() {
   }, []);
 
   return (
-    <div className="p-6 text-white">
-      <h2 className="text-2xl mb-4">Education</h2>
+    <div className="edu-ui min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white p-4 md:p-6 overflow-x-hidden">
 
-      {/* FORM */}
-      <div className="space-y-2 mb-6">
-        <input
-          placeholder="Institution"
-          value={form.institution}
-          onChange={(e) =>
-            setForm({ ...form, institution: e.target.value })
-          }
-        />
+      <h2 className="text-2xl md:text-3xl font-bold mb-6">
+        🎓 Education
+      </h2>
 
-        <input
-          placeholder="Degree"
-          value={form.degree}
-          onChange={(e) =>
-            setForm({ ...form, degree: e.target.value })
-          }
-        />
+      {/* TOP SECTION */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
 
-        <input
-          placeholder="Field"
-          value={form.fieldOfStudy}
-          onChange={(e) =>
-            setForm({ ...form, fieldOfStudy: e.target.value })
-          }
-        />
+        {/* FORM */}
+        <div className="edu-card">
+          <h3 className="text-lg font-semibold mb-4">Add Education</h3>
 
-        <input
-          type="date"
-          value={form.startDate}
-          onChange={(e) =>
-            setForm({ ...form, startDate: e.target.value })
-          }
-        />
+          <div className="space-y-3">
+            <input
+              className="edu-input"
+              placeholder="Institution"
+              value={form.institution}
+              onChange={(e) =>
+                setForm({ ...form, institution: e.target.value })
+              }
+            />
 
-        <input
-          type="date"
-          value={form.endDate}
-          onChange={(e) =>
-            setForm({ ...form, endDate: e.target.value })
-          }
-        />
+            <input
+              className="edu-input"
+              placeholder="Degree"
+              value={form.degree}
+              onChange={(e) =>
+                setForm({ ...form, degree: e.target.value })
+              }
+            />
 
-        <button onClick={handleAdd}>Add</button>
+            <input
+              className="edu-input"
+              placeholder="Field of Study"
+              value={form.fieldOfStudy}
+              onChange={(e) =>
+                setForm({ ...form, fieldOfStudy: e.target.value })
+              }
+            />
+
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="date"
+                className="edu-input"
+                value={form.startDate}
+                onChange={(e) =>
+                  setForm({ ...form, startDate: e.target.value })
+                }
+              />
+              <input
+                type="date"
+                className="edu-input"
+                value={form.endDate}
+                onChange={(e) =>
+                  setForm({ ...form, endDate: e.target.value })
+                }
+              />
+            </div>
+
+            <button
+              onClick={handleAdd}
+              className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-sm font-medium transition"
+            >
+              + Add Education
+            </button>
+          </div>
+        </div>
+
+        {/* INFO PANEL */}
+        <div className="edu-card flex flex-col justify-between">
+          <div>
+            <h3 className="text-lg font-semibold mb-3">
+              📘 About Section
+            </h3>
+
+            <p className="text-sm text-gray-300">
+              Manage your education dynamically. This section updates your
+              portfolio instantly and helps recruiters understand your academic background.
+            </p>
+
+            <ul className="mt-4 text-sm text-gray-400 space-y-2">
+              <li>✔ Add unlimited entries</li>
+              <li>✔ Real-time updates</li>
+              <li>✔ Clean portfolio display</li>
+            </ul>
+          </div>
+
+          <p className="text-xs text-gray-500 mt-6">
+            Tip: Keep latest education on top 🚀
+          </p>
+        </div>
+
       </div>
 
       {/* LIST */}
-      {data.map((edu) => (
-        <div key={edu._id} className="p-3 bg-white/10 rounded mb-3">
-          <h3>{edu.institution}</h3>
-          <p>{edu.degree}</p>
-          <p className="text-sm text-gray-400">
-            {new Date(edu.startDate).getFullYear()} -{" "}
-            {edu.endDate
-              ? new Date(edu.endDate).getFullYear()
-              : "Present"}
-          </p>
+      <div>
+        <h3 className="text-lg font-semibold mb-4">
+          📚 Your Education
+        </h3>
 
-          <button onClick={() => handleDelete(edu._id)}>
-            Delete
-          </button>
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
+          {data.map((edu) => (
+            <div key={edu._id} className="edu-card">
+              <h3 className="text-lg font-semibold break-words">
+                {edu.institution}
+              </h3>
+
+              <p className="text-blue-400 break-words">
+                {edu.degree}
+              </p>
+
+              <p className="text-sm text-gray-400 break-words">
+                {edu.fieldOfStudy}
+              </p>
+
+              <p className="text-xs text-gray-500 mt-1">
+                {new Date(edu.startDate).getFullYear()} -{" "}
+                {edu.endDate
+                  ? new Date(edu.endDate).getFullYear()
+                  : "Present"}
+              </p>
+
+              <button
+                onClick={() => handleDelete(edu._id)}
+                className="mt-2 text-red-400 hover:text-red-600 text-sm"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
+
     </div>
   );
 }

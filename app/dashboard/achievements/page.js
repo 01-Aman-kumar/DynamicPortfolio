@@ -10,6 +10,7 @@ export default function AchievementsPage() {
 
   const fetchAchievements = async () => {
     const res = await API.get("/achievements");
+    console.log(res.data);
     setData(res.data);
   };
 

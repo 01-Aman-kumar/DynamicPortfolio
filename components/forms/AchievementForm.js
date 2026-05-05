@@ -8,66 +8,111 @@ export default function AchievementForm({ onSuccess }) {
     title: "",
     description: "",
     date: "",
-    imageUrl: "",
   });
 
-  const handleSubmit = async () => {
-    try {
-      await API.post("/achievements", {
-        title: form.title,
-        description: form.description,
-        date: form.date,
-        image: {
-          url: form.imageUrl,
-          public_id: "manual-upload",
-        },
-      });
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-      setForm({ title: "", description: "", date: "", imageUrl: "" });
-      onSuccess(); // refresh list
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!form.title) return alert("Title is required");
+
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+
+      formData.append("title", form.title);
+      formData.append("description", form.description);
+      formData.append("date", form.date);
+
+      if (image) {
+        formData.append("image", image);
+      }
+
+      await API.post("/achievements", formData);
+
+      setForm({ title: "", description: "", date: "" });
+      setImage(null);
+      setPreview(null);
+
+      onSuccess();
     } catch (err) {
       console.error(err);
       alert("Failed to add achievement");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="p-4 bg-white/10 rounded mb-6">
-      <h3 className="mb-3">Add Achievement</h3>
+    <div className="p-6 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 mb-6">
+
+      <h3 className="text-lg text-white mb-4 font-semibold">
+        ➕ Add Achievement
+      </h3>
+
+      {preview && (
+        <div className="w-full h-40 mb-3 rounded overflow-hidden border border-white/20">
+          <img src={preview} className="w-full h-full object-cover" />
+        </div>
+      )}
 
       <input
+        name="title"
         placeholder="Title"
-        className="w-full mb-2 p-2 bg-black/40 rounded"
         value={form.title}
-        onChange={(e) => setForm({ ...form, title: e.target.value })}
+        onChange={handleChange}
+        className="w-full p-2 mb-2 rounded bg-white/10 border border-white/20 text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40"
       />
 
       <input
+        name="description"
         placeholder="Description"
-        className="w-full mb-2 p-2 bg-black/40 rounded"
         value={form.description}
-        onChange={(e) => setForm({ ...form, description: e.target.value })}
+        onChange={handleChange}
+        className="w-full p-2 mb-2 rounded bg-white/10 border border-white/20 text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40"
       />
 
       <input
         type="date"
-        className="w-full mb-2 p-2 bg-black/40 rounded"
+        name="date"
         value={form.date}
-        onChange={(e) => setForm({ ...form, date: e.target.value })}
+        onChange={handleChange}
+        className="w-full p-2 mb-2 rounded bg-white/10 border border-white/20 text-white"
       />
 
       <input
-        placeholder="Image URL"
-        className="w-full mb-2 p-2 bg-black/40 rounded"
-        value={form.imageUrl}
-        onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+        type="file"
+        onChange={handleImageChange}
+        className="text-sm text-gray-300 mb-3"
       />
 
       <button
         onClick={handleSubmit}
-        className="bg-white text-black px-4 py-2 rounded"
+        disabled={loading}
+        className="w-full flex items-center justify-center gap-2 
+                   bg-blue-500 hover:bg-blue-600 
+                   text-white py-2 rounded-lg transition 
+                   disabled:opacity-60"
       >
-        Add
+        {loading && (
+          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+        )}
+        {loading ? "Adding..." : "Add Achievement"}
       </button>
     </div>
   );
