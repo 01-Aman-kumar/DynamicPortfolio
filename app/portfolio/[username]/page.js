@@ -100,12 +100,17 @@ export default function PortfolioPage() {
             </a>
 
             <a
-              href={profile?.socialLinks?.linkedin}
-              target="_blank"
-              className="btn-primary"
-            >
-              LinkedIn
-            </a>
+  href={
+    profile?.socialLinks?.linkedin?.startsWith("http")
+      ? profile.socialLinks.linkedin
+      : `https://${profile.socialLinks.linkedin}`
+  }
+  target="_blank"
+  rel="noopener noreferrer"
+  className="btn-primary"
+>
+  LinkedIn
+</a>
           </div>
         </motion.div>
 

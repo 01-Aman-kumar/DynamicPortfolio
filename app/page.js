@@ -17,7 +17,7 @@ export default function Home() {
   const { user } = useAuth();
 const router = useRouter();
 
-console.log(user)
+console.log(users)
   useEffect(() => {
     const fetchUsers = async () => {
       try {
