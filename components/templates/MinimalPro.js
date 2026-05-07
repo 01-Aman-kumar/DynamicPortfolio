@@ -47,7 +47,7 @@ export default function PortfolioPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f7f5f0]">
         <div className="text-[#111] animate-pulse">
-          Loading Portfolio...
+          Loading Profile...
         </div>
       </div>
     );

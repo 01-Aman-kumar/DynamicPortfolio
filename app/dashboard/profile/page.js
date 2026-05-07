@@ -140,17 +140,27 @@ export default function ProfilePage() {
           <Input label="LinkedIn" value={form.linkedin} onChange={(v)=>setForm({...form,linkedin:v})}/>
           {/* <Input label="Resume URL" value={form.resumeUrl} onChange={(v)=>setForm({...form,resumeUrl:v})}/> */}
 
-          {/* <div>
+          <div>
             <label className="p-label">Theme</label>
             <select
-              className="p-input"
-              value={form.theme}
-              onChange={(e)=>setForm({...form,theme:e.target.value})}
-            >
-              <option value="dark">Dark</option>
-              <option value="light">Light</option>
-            </select>
-          </div> */}
+  className="p-input bg-gray-700 text-white border border-gray-600"
+  value={form.theme}
+  onChange={(e) => setForm({ ...form, theme: e.target.value })}
+>
+  <option value="dark" className="bg-gray-700 text-white">
+    Dark
+  </option>
+  <option value="light" className="bg-gray-700 text-white">
+    Light
+  </option>
+  <option value="blue" className="bg-gray-700 text-white">
+    Blue
+  </option>
+  <option value="green" className="bg-gray-700 text-white">
+    Green
+  </option>
+</select>
+          </div>
 
         </div>
 

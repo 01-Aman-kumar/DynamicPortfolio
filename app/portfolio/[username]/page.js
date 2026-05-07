@@ -24,7 +24,7 @@ export default function PortfolioPage() {
   const [loading, setLoading] = useState(true);
 
   // TEMPLATE STATE
-  const [theme, setTheme] = useState("neo-glass");
+  const [theme, setTheme] = useState("");
 
   useEffect(() => {
     if (!username) return;
@@ -34,6 +34,7 @@ export default function PortfolioPage() {
         const res = await API.get(`/portfolio/${username}`);
 
         setData(res.data.data);
+        setTheme(res.data.data.profile.theme);
 
       } catch (error) {
         console.error(error);
@@ -57,16 +58,16 @@ export default function PortfolioPage() {
 
   const renderTemplate = () => {
     switch (theme) {
-      case "minimal-pro":
+      case "light":
         return <MinimalPro data={data} />;
 
-      case "gradient-x":
-        return <NeoGlass data={data} />;
-      case "terminal-dev":
+      case "blue":
+        return <GradientX data={data} />;
+      case "green":
         return <TerminalDev data={data} />;
 
       default:
-        return <GradientX data={data} />;
+        return <NeoGlass data={data} />;
     }
   };
 
@@ -78,11 +79,6 @@ export default function PortfolioPage() {
       <div
         className="
   fixed z-[9999]
-
-  
-   
-
-  
   bottom-2 right-4
   flex-row
 
@@ -100,8 +96,8 @@ export default function PortfolioPage() {
       >
 
         <button
-          onClick={() => setTheme("neo-glass")}
-          className={`px-2 py-1  text-xs transition
+          onClick={() => setTheme("blue")}
+          className={`px-2 py-1  text-xs transition cursor-pointer
           ${theme === "neo-glass"
               ? "bg-blue-500 text-white"
               : "bg-black/70 text-white border border-white/20"
@@ -111,30 +107,30 @@ export default function PortfolioPage() {
         </button>
 
         <button
-          onClick={() => setTheme("minimal-pro")}
-          className={`px-2 py-1  text-xs transition
+          onClick={() => setTheme("light")}
+          className={`px-2 py-1  text-xs transition cursor-pointer
           ${theme === "minimal-pro"
               ? "bg-black text-white"
               : "bg-white text-black"
             }`}
         >
-          Minimal Pro
+          Light
         </button>
 
         <button
-          onClick={() => setTheme("gradient-x")}
-          className={`px-2 py-1  text-xs transition
+          onClick={() => setTheme("dark")}
+          className={`px-2 py-1  text-xs transition cursor-pointer
           ${theme === "gradient-x"
               ? "bg-blue-500 text-white"
               : "bg-black/70 text-white border border-white/20"
             }`}
         >
-          Gradient X
+          Dark
         </button>
 
         <button
-          onClick={() => setTheme("terminal-dev")}
-          className={`px-2 py-1  text-xs transition
+          onClick={() => setTheme("green")}
+          className={`px-2 py-1  text-xs transition cursor-pointer
           ${theme === "terminal-dev"
               ? "bg-green-500 text-black"
               : "bg-black text-green-400 border border-green-500/30"
