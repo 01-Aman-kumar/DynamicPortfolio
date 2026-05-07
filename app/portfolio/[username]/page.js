@@ -49,7 +49,7 @@ export default function PortfolioPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black text-white">
-        Loading Portfolio...
+        Loading Profile...
       </div>
     );
   }
