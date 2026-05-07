@@ -2,10 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import API from "@/lib/api";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     setMounted(true);
@@ -35,6 +39,28 @@ export default function Navbar() {
     window.location.href = "/";
   };
 
+  useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await API.get("/profile/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setProfile(res.data);
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  if (user) {
+    fetchProfile();
+  }
+}, [user]);
+
   if (!mounted) return null;
 
   return (
@@ -42,11 +68,11 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
         <h1 className="text-xl font-bold">
-          <Link href="/">Dev<span className="text-blue-400">Portfolio</span></Link>
+          <Link href="/"><span className="text-blue-400">NextCraze</span></Link>
         </h1>
 
         <div className="flex gap-6 text-sm items-center">
-          <Link href="/portfolio/aman">Portfolio</Link>
+          {/* <Link href="/portfolio/aman">Portfolio</Link> */}
 
           {isLoggedIn ? (
             <>
@@ -58,9 +84,26 @@ export default function Navbar() {
               >
                 Logout
               </button>
+              <Link href={`/portfolio/${profile?.user?.username || "profile"}`}>
+  {profile?.profileImage?.url ? (
+    <img
+      src={profile.profileImage.url}
+      alt="profile"
+      className="w-10 h-10 rounded-full object-cover border border-white/20 cursor-pointer"
+    />
+  ) : (
+    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-semibold cursor-pointer">
+      {user?.username?.[0]?.toUpperCase() || "A"}
+    </div>
+  )}
+</Link>
             </>
           ) : (
+            <>
+            <Link href="/portfolio/aman">Demo Portfolio</Link>
+             <Link href="/register">Sign Up</Link>
             <Link href="/login">Login</Link>
+            </>
           )}
         </div>
       </div>

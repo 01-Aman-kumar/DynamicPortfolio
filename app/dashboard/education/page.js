@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import API from "@/lib/api";
+import toast from "react-hot-toast";
 
 export default function EducationPage() {
   const [data, setData] = useState([]);
@@ -29,11 +30,13 @@ export default function EducationPage() {
       startDate: "",
       endDate: "",
     });
+    toast.success("Education added successfully!");
     fetchData();
   };
 
   const handleDelete = async (id) => {
     await API.delete(`/education/${id}`);
+    toast.success("Education deleted successfully!");
     fetchData();
   };
 

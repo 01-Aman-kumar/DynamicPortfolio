@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import API from "@/lib/api";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -60,10 +61,11 @@ export default function ProfilePage() {
 
       let res = await API.get("profile/me");
       let username = res.data.user.username;
-
+      toast.success("Profile saved successfully");
       router.push(`/portfolio/${username}`);
+      
     } catch {
-      alert("Error saving profile");
+      toast.error("Error saving profile");
     } finally {
       setLoading(false);
     }

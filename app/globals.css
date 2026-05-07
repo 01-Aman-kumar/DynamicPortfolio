@@ -9,6 +9,9 @@
   --font-mono: var(--font-geist-mono);
 } */
 
+html, body {
+  font-family: 'DM Sans', sans-serif;
+}
 
 
  .glass {
@@ -143,4 +146,7 @@
 
 .login-ui .l-card:hover {
   transform: translateY(-2px);
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

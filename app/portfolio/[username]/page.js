@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import API from "@/lib/api";
 import { useParams } from "next/navigation";
-import { motion, useScroll, useTransform } from "framer-motion";
-import Navbar from "@/components/ui/Navbar";
+import API from "@/lib/api";
+
+// TEMPLATES
+import NeoGlass from "@/components/templates/NeoGlass";
+import MinimalPro from "@/components/templates/MinimalPro";
+import GradientX from "@/components/templates/GradientX";
+import TerminalDev from "@/components/templates/TerminalDev";
 
 export default function PortfolioPage() {
   const { username } = useParams();
@@ -19,8 +23,8 @@ export default function PortfolioPage() {
 
   const [loading, setLoading] = useState(true);
 
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 100]);
+  // TEMPLATE STATE
+  const [theme, setTheme] = useState("neo-glass");
 
   useEffect(() => {
     if (!username) return;
@@ -28,8 +32,9 @@ export default function PortfolioPage() {
     const fetchPortfolio = async () => {
       try {
         const res = await API.get(`/portfolio/${username}`);
+
         setData(res.data.data);
-        console.log(res.data.data);
+
       } catch (error) {
         console.error(error);
       } finally {
@@ -41,223 +46,109 @@ export default function PortfolioPage() {
   }, [username]);
 
   if (loading) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-[#020617] text-white">
-      <div className="animate-pulse text-lg">
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black text-white">
         Loading Portfolio...
       </div>
-    </div>
-  );
-}
-
-  const { profile, achievements, projects, skills, education } = data;
-  console.log(profile);
-
-  return (
-    
-    <div className="relative min-h-screen text-white px-6 md:px-20 py-20 overflow-hidden">
-      <Navbar />
-      {/* 🌈 ANIMATED BACKGROUND */}
-      <motion.div
-        style={{ y }}
-        className="absolute inset-0 -z-10"
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#020617] via-[#020617] to-black" />
-
-        <div className="absolute top-[-200px] left-[-150px] w-[600px] h-[600px] bg-blue-500 rounded-full blur-[150px] opacity-20" />
-        <div className="absolute bottom-[-200px] right-[-150px] w-[600px] h-[600px] bg-purple-500 rounded-full blur-[150px] opacity-20" />
-      </motion.div>
-
-      {/* ================= HERO + ABOUT ================= */}
-      <div className="grid lg:grid-cols-2 gap-12 mb-24 items-center">
-
-        {/* HERO */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass p-10"
-        >
-          <img
-            src={profile?.profileImage?.url}
-            className="w-28 h-28 rounded-full mb-6 object-cover border border-white/20"
-          />
-
-          <h1 className="text-4xl font-bold">
-            {profile?.name}
-          </h1>
-
-          <p className="text-gray-300 mt-2">
-            {profile?.title}
-          </p>
-
-          <div className="flex gap-4 mt-6">
-            <a
-              href={profile?.socialLinks?.github}
-              target="_blank"
-              className="btn-outline"
-            >
-              GitHub
-            </a>
-
-            <a
-  href={
-    profile?.socialLinks?.linkedin?.startsWith("http")
-      ? profile.socialLinks.linkedin
-      : `https://${profile.socialLinks.linkedin}`
+    );
   }
-  target="_blank"
-  rel="noopener noreferrer"
-  className="btn-primary"
->
-  LinkedIn
-</a>
-          </div>
-        </motion.div>
 
-        {/* ABOUT */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="glass p-8"
-        >
-          <h2 className="title">About</h2>
-          <p className="text-gray-300 leading-relaxed">
-            {profile?.bio}
-          </p>
-        </motion.div>
+  // ================= TEMPLATE RENDER =================
 
-      </div>
+  const renderTemplate = () => {
+    switch (theme) {
+      case "minimal-pro":
+        return <MinimalPro data={data} />;
 
-      {/* ================= SKILLS + EDUCATION ================= */}
-      <div className="grid lg:grid-cols-2 gap-12 mb-24">
+      case "gradient-x":
+        return <NeoGlass data={data} />;
+      case "terminal-dev":
+        return <TerminalDev data={data} />;
 
-        {/* SKILLS */}
-        <div className="glass p-8">
-          <h2 className="title">Skills</h2>
+      default:
+        return <GradientX data={data} />;
+    }
+  };
 
-          <div className="space-y-5 mt-4">
-            {skills.map((s, i) => (
-              <motion.div
-                key={s._id}
-                initial={{ width: 0 }}
-                whileInView={{ width: `${s.level}%` }}
-                viewport={{ once: true }}
-                className="relative"
-              >
-                <div className="flex justify-between text-sm mb-1">
-                  <span>{s.name}</span>
-                  <span className="text-gray-400">{s.level}%</span>
-                </div>
-
-                <div className="w-full bg-white/10 h-2 rounded-full">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${s.level}%` }}
-                    transition={{ duration: 1 }}
-                    className="bg-blue-500 h-2 rounded-full"
-                  />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* EDUCATION */}
-        <div className="glass p-8">
-          <h2 className="title">Education</h2>
-
-          <div className="space-y-6 mt-4">
-            {education.map((edu) => (
-              <div key={edu._id} className="timeline">
-                <h3 className="font-semibold">
-                  {edu.institution}
-                </h3>
-                <p className="text-gray-300">
-                  {edu.degree}
-                </p>
-                <p className="text-sm text-gray-400">
-                  {new Date(edu.startDate).getFullYear()} -{" "}
-                  {edu.endDate
-                    ? new Date(edu.endDate).getFullYear()
-                    : "Present"}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-      </div>
-
-      {/* ================= PROJECTS ================= */}
-      <Section title="Projects">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((p) => (
-            <motion.div
-              key={p._id}
-              whileHover={{ y: -10 }}
-              className="glass p-6"
-            >
-              <img src={p.image?.url} className="rounded mb-3" />
-              <h3 className="font-semibold">{p.title}</h3>
-              <p className="text-gray-400 text-sm">
-                {p.description}
-              </p>
-              <div className="flex gap-4 mt-3 text-sm">
-
-                  {p.liveLink && (
-                    <a
-                      href={p.liveLink}
-                      target="_blank"
-                      className="text-blue-400"
-                    >
-                      Live
-                    </a>
-                  )}
-
-                  {p.githubLink && (
-                    <a
-                      href={p.githubLink}
-                      target="_blank"
-                      className="text-gray-400"
-                    >
-                      GitHub
-                    </a>
-                  )}
-
-                </div>
-                  
-            </motion.div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ================= ACHIEVEMENTS ================= */}
-      <Section title="Achievements">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {achievements.map((a) => (
-            <motion.div
-              key={a._id}
-              whileHover={{ scale: 1.03 }}
-              className="glass p-6"
-            >
-              <img src={a.image?.url} className="rounded mb-3" />
-              <h3 className="font-semibold">{a.title}</h3>
-              <p className="text-gray-400">{a.description}</p>
-            </motion.div>
-          ))}
-        </div>
-      </Section>
-    </div>
-  );
-}
-
-/* ================= COMPONENTS ================= */
-
-function Section({ title, children }) {
   return (
-    <div className="mb-20">
-      <h2 className="title mb-6">{title}</h2>
-      {children}
+    <div>
+
+      {/* ================= TEMPLATE SWITCHER ================= */}
+
+      <div
+        className="
+  fixed z-[9999]
+
+  
+   
+
+  
+  bottom-2 right-4
+  flex-row
+
+  flex gap-3
+  p-3
+
+  bg-black/40 backdrop-blur-2xl
+  border border-white/10
+  shadow-2xl
+
+  overflow-x-auto
+  max-w-[92vw]
+  scrollbar-hide
+  "
+      >
+
+        <button
+          onClick={() => setTheme("neo-glass")}
+          className={`px-2 py-1  text-xs transition
+          ${theme === "neo-glass"
+              ? "bg-blue-500 text-white"
+              : "bg-black/70 text-white border border-white/20"
+            }`}
+        >
+          Neo Glass
+        </button>
+
+        <button
+          onClick={() => setTheme("minimal-pro")}
+          className={`px-2 py-1  text-xs transition
+          ${theme === "minimal-pro"
+              ? "bg-black text-white"
+              : "bg-white text-black"
+            }`}
+        >
+          Minimal Pro
+        </button>
+
+        <button
+          onClick={() => setTheme("gradient-x")}
+          className={`px-2 py-1  text-xs transition
+          ${theme === "gradient-x"
+              ? "bg-blue-500 text-white"
+              : "bg-black/70 text-white border border-white/20"
+            }`}
+        >
+          Gradient X
+        </button>
+
+        <button
+          onClick={() => setTheme("terminal-dev")}
+          className={`px-2 py-1  text-xs transition
+          ${theme === "terminal-dev"
+              ? "bg-green-500 text-black"
+              : "bg-black text-green-400 border border-green-500/30"
+            }`}
+        >
+          Terminal Dev
+        </button>
+
+      </div>
+
+      {/* ================= TEMPLATE ================= */}
+
+      {renderTemplate()}
+
     </div>
   );
 }

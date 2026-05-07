@@ -13,14 +13,18 @@ import {
   Trophy,
   Menu,
   X,
+  ArrowLeft,
 } from "lucide-react";
+import API from "@/lib/api";
 
 export default function DashboardLayout({ children }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const [profile, setProfile] = useState(null);
 
   const { user, loading } = useAuth();
+  // console.log(user);
 
   // 🔐 STRICT AUTH GUARD
   useEffect(() => {
@@ -28,6 +32,31 @@ export default function DashboardLayout({ children }) {
       router.replace("/login"); // 🔥 replace (not push)
     }
   }, [user, loading]);
+
+  useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await API.get("/profile/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(res.data);
+
+      setProfile(res.data);
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  if (user) {
+    fetchProfile();
+  }
+}, [user]);
+console.log(profile);
 
   // ⛔ BLOCK RENDER COMPLETELY
   if (loading) {
@@ -54,7 +83,7 @@ export default function DashboardLayout({ children }) {
       <aside className="hidden md:flex flex-col w-64 bg-white/5 border-r border-white/10 p-6">
         <h2 className="text-xl font-bold mb-8">
           <Link href="/">
-            Dev<span className="text-blue-400">Portfolio</span>
+        Dev<span className="text-blue-400">Portfolio</span>
           </Link>
         </h2>
 
@@ -112,9 +141,19 @@ export default function DashboardLayout({ children }) {
             {pathname.split("/").pop()?.toUpperCase() || "DASHBOARD"}
           </h1>
 
-          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-            {user?.username?.[0]?.toUpperCase() || "A"}
-          </div>
+          <Link href={`/portfolio/${profile?.user?.username || "profile"}`}>
+  {profile?.profileImage?.url ? (
+    <img
+      src={profile.profileImage.url}
+      alt="profile"
+      className="w-10 h-10 rounded-full object-cover border border-white/20 cursor-pointer"
+    />
+  ) : (
+    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-semibold cursor-pointer">
+      {user?.username?.[0]?.toUpperCase() || "A"}
+    </div>
+  )}
+</Link>
         </header>
 
         {/* CONTENT */}

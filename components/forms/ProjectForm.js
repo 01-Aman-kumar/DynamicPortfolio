@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import API from "@/lib/api";
+import toast from "react-hot-toast";
 
 export default function ProjectForm({ onSuccess }) {
   const [form, setForm] = useState({
@@ -62,9 +63,10 @@ export default function ProjectForm({ onSuccess }) {
       });
 
       onSuccess();
+      toast.success("Project created successfully");
     } catch (err) {
       console.error(err);
-      alert("Error creating project");
+      toast.error("Error creating project");
     } finally {
       setLoading(false);
     }

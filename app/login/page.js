@@ -1,79 +1,11 @@
-// "use client";
 
-// import { useState } from "react";
-// import API from "@/lib/api";
-// import { useRouter } from "next/navigation";
-
-// export default function LoginPage() {
-//   const [form, setForm] = useState({ email: "", password: "" });
-//   const router = useRouter();
-
-//   const handleLogin = async () => {
-//     try {
-//       const res = await API.post("/auth/login", form);
-//       localStorage.setItem("token", res.data.token);
-//       router.push("/dashboard");
-//     } catch (err) {
-//       alert("Login failed");
-//     }
-//   };
-
-//   return (
-//     <div className="login-ui min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white px-4">
-
-//       <div className="l-card w-full max-w-sm">
-
-//         <h2 className="text-2xl font-bold mb-1">
-//           🔐 Admin Login
-//         </h2>
-//         <p className="text-sm text-gray-400 mb-5">
-//           Access your dashboard
-//         </p>
-
-//         {/* EMAIL */}
-//         <input
-//           className="l-input mb-3"
-//           placeholder="Email"
-//           onChange={(e) =>
-//             setForm({ ...form, email: e.target.value })
-//           }
-//         />
-
-//         {/* PASSWORD */}
-//         <input
-//           type="password"
-//           className="l-input mb-4"
-//           placeholder="Password"
-//           onChange={(e) =>
-//             setForm({ ...form, password: e.target.value })
-//           }
-//         />
-
-//         {/* BUTTON */}
-//         <button
-//           onClick={handleLogin}
-//           className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-sm font-medium transition"
-//         >
-//           Login
-//         </button>
-
-//         {/* EXTRA UI */}
-//         <p className="text-xs text-gray-500 mt-4 text-center">
-//           Secure admin access 🔒<span><a href="/register" className="text-blue-400 hover:text-blue-300">
-//             Sign up
-//           </a></span>
-//         </p>
-//       </div>
-
-//     </div>
-//   );
-// }
 "use client";
 
 import { useState, useEffect } from "react";
 import API from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -92,7 +24,7 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     if (!form.email || !form.password) {
-      alert("Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
 
@@ -103,9 +35,10 @@ export default function LoginPage() {
 
       // ✅ Use context (NOT direct localStorage)
       login(res.data.token);
+      toast.success("Logged in successfully");
       router.push("/dashboard");
     } catch (err) {
-      alert(err?.response?.data?.message || "Login failed");
+      toast.error(err?.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
